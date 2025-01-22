@@ -52,8 +52,8 @@ stages {
                 sh '''
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                 docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
-                docker push $DOCKER_ID/$DOCKER_IMAGE_movie:$DOCKER_TAG
-                docker push $DOCKER_ID/$DOCKER_IMAGE_cast:$DOCKER_TAG
+                docker push $DOCKER_ID/"${DOCKER_IMAGE}_movie":$DOCKER_TAG
+                docker push $DOCKER_ID/"${DOCKER_IMAGE}_cast":$DOCKER_TAG
                 '''
                 }
             }
