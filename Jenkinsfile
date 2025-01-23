@@ -33,9 +33,24 @@ stages {
                 -e POSTGRES_DB=movie_db_dev \
                 -v postgres_data_movie:/var/lib/postgresql/data/ \
                 postgres:12.1-alpine
-
-
-
+                sleep 5
+                docker run -d  -it --rm --network=my-net \
+                --name castdb \
+                -e POSTGRES_PASSWORD=cast_db_password \
+                -e POSTGRES_USER=cast_db_username \
+                -e POSTGRES_DB=cast_db_dev \
+                -v postgres_data_cast:/var/lib/postgresql/data \
+                postgres:12.1-alpine
+                sleep 10
+                docker run -it -d --rm --network=my-net --name movie $DOCKER_ID/"${DOCKER_IMAGE}_movie":$DOCKER_TAG sh -c "uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
+                sleep 5
+                docker run -it -d --rm --network=my-net --name cast $DOCKER_ID/"${DOCKER_IMAGE}_cast":$DOCKER_TAG sh -c "uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
+                sleep 10
+                docker run -d  -it --rm --network=my-net \
+                --name app \
+                -p 8081:8080 \
+                -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
+                nginx:latest
 
                 '''
                 }
@@ -45,6 +60,11 @@ stages {
             steps {
                     script {
                     sh '''
+
+
+
+                    docker network rm my-net
+
                     sleep 10
                     '''
                     }
