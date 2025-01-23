@@ -22,13 +22,21 @@ stages {
             steps {
                 script {
                 sh '''
+
+
                 docker network create -d bridge my-net
+
                 docker run -d  -it --rm --network=my-net \
-                -name moviedb \
+                --name moviedb \
                 -e POSTGRES_PASSWORD=movie_db_password \
                 -e POSTGRES_USER=movie_db_username \
                 -e POSTGRES_DB=movie_db_dev \
-                -v postgres_data_movie:/var/lib posgresql/data/ postgres:12.1-alpine
+                -v postgres_data_movie:/var/lib/postgresql/data/ \
+                postgres:12.1-alpine
+
+
+
+
                 '''
                 }
             }
