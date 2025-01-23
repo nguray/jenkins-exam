@@ -107,6 +107,14 @@ stages {
                 cp fastapi/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appcasts casts --values=values.yml --namespace staging
+                sleep 10
+                cp movies/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appmovies movies --values=values.yml --namespace staging
+                sleep 5
+                kubectl apply -f nginx-deployment.yaml --namespace staging
 
                 '''
                 }
