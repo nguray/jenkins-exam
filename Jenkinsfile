@@ -61,9 +61,14 @@ stages {
                     script {
                     sh '''
 
+                    curl http://localhost:8081/api/v1/movies/docs
+                    curl http://localhost:8081/api/v1/casts/docs
 
+                    docker stop app movie cast castdb moviedb
 
-                    sleep 10
+                    docker network rm my-net
+
+                    sleep 5
                     '''
                     }
             }
