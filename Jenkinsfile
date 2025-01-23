@@ -75,8 +75,8 @@ stage('Deploiement en dev'){
                 cp fastapi/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app fastapi --values=values.yml --namespace dev
-                helm template fastapi --values=values.yml --namespace dev
+                helm upgrade --install --debug --dry-run app fastapi --values=values.yml --namespace dev
+
                 '''
                 }
             }
@@ -97,7 +97,7 @@ stage('Deploiement en staging'){
                 cp fastapi/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app fastapi --values=values.yml --namespace staging
+                helm upgrade --install  --debug --dry-run app fastapi --values=values.yml --namespace staging
                 '''
                 }
             }
@@ -124,7 +124,7 @@ stage('Deploiement en staging'){
                 cp fastapi/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install app fastapi --values=values.yml --namespace prod
+                helm upgrade --install  --debug --dry-run app fastapi --values=values.yml --namespace prod
                 '''
                 }
             }
