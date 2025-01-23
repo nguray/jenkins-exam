@@ -71,6 +71,7 @@ stages {
                 ls
                 cat $KUBECONFIG > .kube/config
                 kubectl apply -f ps-cast-deploy.yaml
+                sleep 10
                 kubectl apply -f cast-service-deploy.yaml
                 '''
                 }
