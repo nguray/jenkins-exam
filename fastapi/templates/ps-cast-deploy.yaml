@@ -14,7 +14,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /data/postgresql
+    path: /data/postgresqlcast
 
 ---
 
@@ -71,10 +71,10 @@ spec:
             - configMapRef:
                 name: postgres-secret-cast
           volumeMounts:
-            - mountPath: /var/lib/postgres/data
-              name: postgresdata-cast
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdatacast
       volumes:
-        - name: postgresdata-cast
+        - name: postgresdatacast
           persistentVolumeClaim:
             claimName: postgres-volume-claim-cast
 

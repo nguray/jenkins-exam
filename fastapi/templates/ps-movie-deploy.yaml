@@ -14,7 +14,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: /data/postgresql
+    path: /data/postgresqlmovie
 
 ---
 
@@ -72,9 +72,9 @@ spec:
                 name: postgres-secret-movie
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgresdata
+              name: postgresdatamovie
       volumes:
-        - name: postgresdata
+        - name: postgresdatamovie
           persistentVolumeClaim:
             claimName: postgres-volume-claim-movie
 
