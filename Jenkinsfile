@@ -63,8 +63,6 @@ stages {
 
 
 
-                    docker network rm my-net
-
                     sleep 10
                     '''
                     }
