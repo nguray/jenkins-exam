@@ -1,45 +1,10 @@
 
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-volume-movie
-  labels:
-    type: local
-    app: postgres-movie
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: /data/postgresqlmovie
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-volume-claim-movie
-  labels:
-    app: postgres-movie
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-
----
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-secret-movie
+  name: db-secret-credentials1
   labels:
-    app: postgres-movie
+    app: postgresdb1
 data:
   POSTGRES_DB: movie_db_dev
   POSTGRES_USER: movie_db_username
@@ -47,36 +12,69 @@ data:
 
 ---
 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresdb-persistent-volume1
+  labels:
+    type: local
+    app: postgresdb1
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/db1"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-persistent-volume-claim1
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Gi
+
+---
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-movie-deploy
+  name: postgresdb1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-movie
+      app: postgresdb1
   template:
     metadata:
       labels:
-        app: postgres-movie
+        app: postgresdb1
     spec:
       containers:
-        - name: postgres-movie
-          image: 'postgres:12.1-alpine'
-          imagePullPolicy: IfNotPresent
+        - name: postgresdb1
+          image: postgres:12.1-alpine
           ports:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-secret-movie
+                name: db-secret-credentials1
           volumeMounts:
             - mountPath: /var/lib/postgres/data
-              name: postgresdatamovie
+              name: db-data
       volumes:
-        - name: postgresdatamovie
+        - name: db-data
           persistentVolumeClaim:
-            claimName: postgres-volume-claim-movie
+            claimName: db-persistent-volume-claim1
+
 
 ---
 
@@ -86,7 +84,7 @@ metadata:
   name: moviedb
 spec:
   selector:
-    app: postgres-movie
+    app: postgresdb1
   type: ClusterIP
   ports:
   - port: 5432
