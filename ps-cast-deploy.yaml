@@ -10,6 +10,23 @@ data:
   POSTGRES_PASSWORD: cast_db_password
 
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresdb-persistent-volume
+  labels:
+    type: local
+    app: postgresdb
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/db"
+
+---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,7 +38,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 8Gi
+      storage: 1Gi
 
 ---
 
