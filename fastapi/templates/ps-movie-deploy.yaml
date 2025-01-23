@@ -71,7 +71,7 @@ spec:
             - configMapRef:
                 name: postgres-secret-movie
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgres/data
               name: postgresdatamovie
       volumes:
         - name: postgresdatamovie
