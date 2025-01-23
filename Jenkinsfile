@@ -13,6 +13,7 @@ stages {
                  docker rm -f jenkins
                  docker build -t $DOCKER_ID/"${DOCKER_IMAGE}_movie":$DOCKER_TAG ./movie-service
                  docker build -t $DOCKER_ID/"${DOCKER_IMAGE}_cast":$DOCKER_TAG ./cast-service
+                 docker build -t $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG .
                 sleep 6
                 '''
                 }
@@ -52,7 +53,6 @@ stages {
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                 docker push $DOCKER_ID/"${DOCKER_IMAGE}_movie":$DOCKER_TAG
                 docker push $DOCKER_ID/"${DOCKER_IMAGE}_cast":$DOCKER_TAG
-                sleep 5
                 '''
                 }
             }
