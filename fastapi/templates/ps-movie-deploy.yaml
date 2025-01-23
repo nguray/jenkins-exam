@@ -6,7 +6,7 @@ metadata:
   name: postgres-volume-movie
   labels:
     type: local
-    app: postgres
+    app: postgres-movie
 spec:
   storageClassName: manual
   capacity:
@@ -23,7 +23,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-volume-claim-movie
   labels:
-    app: postgres
+    app: postgres-movie
 spec:
   storageClassName: manual
   accessModes:
@@ -39,7 +39,7 @@ kind: ConfigMap
 metadata:
   name: postgres-secret-movie
   labels:
-    app: postgres
+    app: postgres-movie
 data:
   POSTGRES_DB: movie_db_dev
   POSTGRES_USER: movie_db_username

@@ -6,7 +6,7 @@ metadata:
   name: postgres-volume-cast
   labels:
     type: local
-    app: postgres
+    app: postgres-cast
 spec:
   storageClassName: manual
   capacity:
@@ -23,7 +23,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-volume-claim-cast
   labels:
-    app: postgres
+    app: postgres-cast
 spec:
   storageClassName: manual
   accessModes:
@@ -39,7 +39,7 @@ kind: ConfigMap
 metadata:
   name: postgres-secret-cast
   labels:
-    app: postgres
+    app: postgres-cast
 data:
   POSTGRES_DB: cast_db_dev
   POSTGRES_USER: cast_db_username
