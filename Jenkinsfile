@@ -77,6 +77,8 @@ stages {
                 kubectl apply -f ps-movie-deploy.yaml
                 sleep 10
                 kubectl apply -f movie-service-deploy.yaml
+                sleep 10
+                kubectl apply -f nginx-deployment.yaml
                 '''
                 }
             }
