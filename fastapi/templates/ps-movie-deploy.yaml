@@ -52,7 +52,7 @@ kind: Deployment
 metadata:
   name: postgres-movie-deploy
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgres-movie
