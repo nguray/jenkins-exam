@@ -36,6 +36,6 @@ spec:
     app: cast-api
   type: ClusterIP
   ports:
-  - port: 8002
+  - port: 8001
     protocol: TCP
     targetPort: 8000
