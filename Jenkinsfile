@@ -73,6 +73,10 @@ stages {
                 kubectl apply -f ps-cast-deploy.yaml
                 sleep 10
                 kubectl apply -f cast-service-deploy.yaml
+                sleep 10
+                kubectl apply -f ps-movie-deploy.yaml
+                sleep 10
+                kubectl apply -f movie-service-deploy.yaml
                 '''
                 }
             }
