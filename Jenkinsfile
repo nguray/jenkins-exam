@@ -52,6 +52,8 @@ stages {
                 sh '''
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                 docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+                docker push $DOCKER_ID/"${DOCKER_IMAGE}_movie":$DOCKER_TAG
+                docker push $DOCKER_ID/"${DOCKER_IMAGE}_cast":$DOCKER_TAG
                 '''
                 }
             }
@@ -73,17 +75,17 @@ stages {
                 kubectl apply -f ps-cast-deploy.yaml
                 sleep 10
                 kubectl apply -f ps-movie-deploy.yaml
-                sleep 10
+                sleep 20
                 cp casts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml
-                sleep 10
+                sleep 20
                 cp movies/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appmovies movies --values=values.yml
-                sleep 5
+                sleep 10
                 kubectl apply -f nginx-deployment.yaml
                 '''
                 }
