@@ -36,6 +36,6 @@ spec:
     app: movie-api
   type: ClusterIP
   ports:
-  - port: 8001
+  - port: 8002
     protocol: TCP
     targetPort: 8000
