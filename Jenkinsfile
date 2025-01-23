@@ -72,21 +72,21 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                kubectl apply -f ps-cast-deploy.yaml
+                kubectl apply -f ps-cast-deploy.yaml --namespace dev
                 sleep 5
-                kubectl apply -f ps-movie-deploy.yaml
+                kubectl apply -f ps-movie-deploy.yaml --namespace dev
                 sleep 5
                 cp casts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appcasts casts --values=values.yml
+                helm upgrade --install appcasts casts --values=values.yml --namespace dev
                 sleep 10
                 cp movies/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appmovies movies --values=values.yml
+                helm upgrade --install appmovies movies --values=values.yml --namespace dev
                 sleep 5
-                kubectl apply -f nginx-deployment.yaml
+                kubectl apply -f nginx-deployment.yaml --namespace dev
                 '''
                 }
             }
