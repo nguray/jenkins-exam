@@ -72,7 +72,7 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                kubectl apply -f ps-cast-deploy.yaml
+                kubectl apply -f ps-movie-deploy.yaml
                 '''
                 }
             }
