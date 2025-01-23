@@ -62,7 +62,7 @@ stages {
                     sh '''
 
                     curl http://localhost:8081/api/v1/movies/docs
-                    curl http://localhost:8081/api/v1/casts/docs
+                    curl http://localhost:8081/api/v1/casts/docs1
 
                     docker stop app movie cast castdb moviedb
 
