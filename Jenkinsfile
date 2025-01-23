@@ -70,7 +70,7 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp pscasdb/values.yaml values.yml
+                cp pscastdb/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install castdb pscastdb --values=values.yml
