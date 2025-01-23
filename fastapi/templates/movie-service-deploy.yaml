@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-service-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movie-api
+  template:
+    metadata:
+      labels:
+        app: movie-api
+    spec:
+      containers:
+      - name: movie-api
+        image: "{{ .Values.imageMovie.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.imageMovie.pullPolicy }}
+        command: ["uvicorn"]
+        args: [ "app.main:app", "--reload", "--host", "0.0.0.0"]
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie
+spec:
+  selector:
+    app: movie-api
+  type: ClusterIP
+  ports:
+  - port: 8001
+    protocol: TCP
+    targetPort: 8000

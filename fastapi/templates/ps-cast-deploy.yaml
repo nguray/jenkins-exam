@@ -1,0 +1,94 @@
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-volume-cast
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /data/postgresql
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim-cast
+  labels:
+    app: postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-secret-cast
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: cast_db_dev
+  POSTGRES_USER: cast_db_username
+  POSTGRES_PASSWORD: cast_db_password
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-cast-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: postgres-cast
+  template:
+    metadata:
+      labels:
+        app: postgres-cast
+    spec:
+      containers:
+        - name: postgres-cast
+          image: 'postgres:12.1-alpine'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-secret-cast
+          volumeMounts:
+            - mountPath: /var/lib/postgres/data
+              name: postgresdata-cast
+      volumes:
+        - name: postgresdata-cast
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim-cast
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: castdb
+spec:
+  selector:
+    app: postgres-cast
+  type: ClusterIP
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
