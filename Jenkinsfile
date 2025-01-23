@@ -70,15 +70,10 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                kubectl apply -f ps-cast-deploy.yaml
-                sleep 10
-                kubectl apply -f cast-service-deploy.yaml
-                sleep 10
-                kubectl apply -f ps-movie-deploy.yaml
-                sleep 10
-                kubectl apply -f movie-service-deploy.yaml
-                sleep 10
-                kubectl apply -f nginx-deployment.yaml
+                cp pscasdb/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install castdb pscastdb --values=values.yml
                 '''
                 }
             }
