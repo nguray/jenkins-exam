@@ -188,11 +188,6 @@ stages {
         }
 
         stage('Deploiement en prod'){
-        when {
-            expression {
-                BRANCH_NAME == 'main'
-            }
-        }
         environment
         {
         KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
