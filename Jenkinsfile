@@ -127,65 +127,6 @@ stages {
 
         }
 
-        stage('Deploiement en qa'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
-            steps {
-                script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp casts/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appcasts casts --values=values.yml --namespace qa
-                sleep 10
-                cp movies/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appmovies movies --values=values.yml --namespace qa
-                sleep 5
-                kubectl apply -f nginx-deployment.yaml --namespace qa
-
-                '''
-                }
-            }
-
-        }
-
-        stage('Deploiement en staging'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
-            steps {
-                script {
-                sh '''
-                rm -Rf .kube
-                mkdir .kube
-                ls
-                cat $KUBECONFIG > .kube/config
-                cp casts/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appcasts casts --values=values.yml --namespace staging
-                sleep 10
-                cp movies/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                helm upgrade --install appmovies movies --values=values.yml --namespace staging
-                sleep 5
-                kubectl apply -f nginx-deployment.yaml --namespace staging
-
-                '''
-                }
-            }
-
-        }
 
         stage('Deploiement en prod'){
         environment
