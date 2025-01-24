@@ -139,7 +139,7 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp fastapi/values.yaml values.yml
+                cp casts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace qa
@@ -169,7 +169,7 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp fastapi/values.yaml values.yml
+                cp casts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace staging
@@ -210,7 +210,7 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp fastapi/values.yaml values.yml
+                cp casts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace prod
