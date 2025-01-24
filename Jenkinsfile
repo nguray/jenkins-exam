@@ -143,7 +143,7 @@ stages {
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace qa
-                sleep 10
+                sleep 5
                 cp movies/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
@@ -173,7 +173,7 @@ stages {
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace staging
-                sleep 10
+                sleep 5
                 cp movies/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
@@ -194,7 +194,7 @@ stages {
             KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
             }
             when {
-                expression {env.GIT_BRANCH == 'origin/master' | env.GIT_BRANCH == 'origin/dev'}
+                expression {env.GIT_BRANCH == 'origin/master' | env.GIT_BRANCH == 'origin/main'}
             }
             steps {
             // Create an Approval Button with a timeout of 15minutes.
@@ -213,7 +213,7 @@ stages {
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install appcasts casts --values=values.yml --namespace prod
-                sleep 10
+                sleep 5
                 cp movies/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
