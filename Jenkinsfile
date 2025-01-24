@@ -62,7 +62,7 @@ stages {
                     sh '''
 
                     curl http://localhost:8081/api/v1/movies/docs
-                    curl http://localhost:8081/api/v1/casts/docs1
+                    curl http://localhost:8081/api/v1/casts/docs
 
                     docker stop app movie cast castdb moviedb
 
@@ -188,6 +188,11 @@ stages {
         }
 
         stage('Deploiement en prod'){
+        when {
+            expression {
+                BRANCH_NAME == 'main' || BRANCH_NAME == 'master'
+            }
+        }
         environment
         {
         KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
@@ -195,9 +200,9 @@ stages {
             steps {
             // Create an Approval Button with a timeout of 15minutes.
             // this require a manuel validation in order to deploy on production environment
-                    timeout(time: 15, unit: "MINUTES") {
-                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
-                    }
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                }
 
                 script {
                 sh '''
