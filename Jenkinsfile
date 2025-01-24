@@ -190,7 +190,7 @@ stages {
         stage('Deploiement en prod'){
         when {
             expression {
-                BRANCH_NAME == 'main' || BRANCH_NAME == 'master'
+                BRANCH_NAME == 'main'
             }
         }
         environment
