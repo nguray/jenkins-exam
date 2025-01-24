@@ -127,43 +127,42 @@ stages {
 
         }
 
-
         stage('Deploiement en prod'){
-        environment
-        {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
-        }
-        when {
-            expression { BRANCH_NAME ==~ /(production|staging)/ }
-        }
-        steps {
-        // Create an Approval Button with a timeout of 15minutes.
-        // this require a manuel validation in order to deploy on production environment
-            timeout(time: 15, unit: "MINUTES") {
-                input message: 'Do you want to deploy in production ?', ok: 'Yes'
+            environment
+            {
+            KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
             }
-
-            script {
-            sh '''
-            rm -Rf .kube
-            mkdir .kube
-            ls
-            cat $KUBECONFIG > .kube/config
-            cp casts/values.yaml values.yml
-            cat values.yml
-            sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-            helm upgrade --install appcasts casts --values=values.yml --namespace prod
-            sleep 10
-            cp movies/values.yaml values.yml
-            cat values.yml
-            sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-            helm upgrade --install appmovies movies --values=values.yml --namespace prod
-            sleep 5
-            kubectl apply -f nginx-deployment.yaml --namespace prod
-
-            '''
+            when {
+                expression {env.GIT_BRANCH == 'origin/master'}
             }
-        }
+            steps {
+            // Create an Approval Button with a timeout of 15minutes.
+            // this require a manuel validation in order to deploy on production environment
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                }
+
+                script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp casts/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appcasts casts --values=values.yml --namespace prod
+                sleep 10
+                cp movies/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appmovies movies --values=values.yml --namespace prod
+                sleep 5
+                kubectl apply -f nginx-deployment.yaml --namespace prod
+
+                '''
+                }
+            }
 
         }
 
