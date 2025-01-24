@@ -194,7 +194,7 @@ stages {
             KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
             }
             when {
-                expression {env.GIT_BRANCH == 'origin/master'}
+                expression {env.GIT_BRANCH == 'origin/master' | env.GIT_BRANCH == 'origin/main'}
             }
             steps {
             // Create an Approval Button with a timeout of 15minutes.
