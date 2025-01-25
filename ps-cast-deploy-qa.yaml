@@ -15,7 +15,7 @@ data:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgresdb-persistent-volume-qa
+  name: postgresdb-persistent-volume-cast-qa
   labels:
     type: local
     app: postgresdbcast
