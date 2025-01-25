@@ -106,9 +106,9 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                kubectl apply -f ps-cast-deploy.yaml --namespace dev
+                kubectl apply -f ps-cast-deploy-dev.yaml --namespace dev
                 sleep 5
-                kubectl apply -f ps-movie-deploy.yaml --namespace dev
+                kubectl apply -f ps-movie-deploy-dev.yaml --namespace dev
                 sleep 5
                 cp casts/values.yaml values.yml
                 cat values.yml
@@ -139,9 +139,9 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                kubectl apply -f ps-cast-deploy.yaml --namespace qa
+                kubectl apply -f ps-cast-deploy-qa.yaml --namespace qa
                 sleep 5
-                kubectl apply -f ps-movie-deploy.yaml --namespace qa
+                kubectl apply -f ps-movie-deploy-qa.yaml --namespace qa
                 sleep 5
                 cp casts/values.yaml values.yml
                 cat values.yml
