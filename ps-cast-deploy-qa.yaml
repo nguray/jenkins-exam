@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-persistent-volume-claim-qa
+  name: db-persistent-volume-claim-cast-qa
 spec:
   storageClassName: manual
   accessModes:
@@ -72,7 +72,7 @@ spec:
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: db-persistent-volume-claim-qa
+            claimName: db-persistent-volume-claim-cast-qa
 
 
 ---

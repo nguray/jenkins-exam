@@ -14,7 +14,7 @@ data:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgresdb-persistent-volume-dev
+  name: postgresdb-persistent-volume-cast-dev
   labels:
     type: local
     app: postgresdbcast
@@ -32,7 +32,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-persistent-volume-claim-dev
+  name: db-persistent-volume-claim-cast-dev
 spec:
   storageClassName: manual
   accessModes:
@@ -71,7 +71,7 @@ spec:
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: db-persistent-volume-claim-dev
+            claimName: db-persistent-volume-claim-cast-dev
 
 ---
 
