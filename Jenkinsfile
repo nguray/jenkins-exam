@@ -170,6 +170,92 @@ stages {
         }
 
 
+        stage('Deploiement en staging'){
+        environment
+        {
+        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        }
+            steps {
+                script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp ps-cast-deploy-stage.yaml ps-cast-deploy.yaml
+                sed -i 's/{STAGE}/staging/g' ps-cast-deploy.yaml
+                kubectl apply -f ps-cast-deploy.yaml --namespace staging
+                sleep 5
+                cp ps-movie-deploy-stage.yaml ps-movie-deploy.yaml
+                sed -i 's/{STAGE}/staging/g' ps-movie-deploy.yaml
+                kubectl apply -f ps-movie-deploy.yaml --namespace staging
+                sleep 5
+                cp casts/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appcasts casts --values=values.yml --namespace staging
+                sleep 5
+                cp movies/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appmovies movies --values=values.yml --namespace staging
+                sleep 5
+                kubectl apply -f nginx-deployment.yaml --namespace staging
+
+                '''
+                }
+            }
+
+        }
+
+
+        stage('Deploiement en prod'){
+            environment
+            {
+            KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+            }
+            when {
+                expression {env.GIT_BRANCH == 'origin/master' | env.GIT_BRANCH == 'origin/main'}
+            }
+            steps {
+            // Create an Approval Button with a timeout of 15minutes.
+            // this require a manuel validation in order to deploy on production environment
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                }
+
+                script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp ps-cast-deploy-stage.yaml ps-cast-deploy.yaml
+                sed -i 's/{STAGE}/prod/g' ps-cast-deploy.yaml
+                kubectl apply -f ps-cast-deploy.yaml --namespace prod
+                sleep 5
+                cp ps-movie-deploy-stage.yaml ps-movie-deploy.yaml
+                sed -i 's/{STAGE}/prod/g' ps-movie-deploy.yaml
+                kubectl apply -f ps-movie-deploy.yaml --namespace prod
+                sleep 5
+                cp casts/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appcasts casts --values=values.yml --namespace prod
+                sleep 5
+                cp movies/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                helm upgrade --install appmovies movies --values=values.yml --namespace prod
+                sleep 5
+                kubectl apply -f nginx-deployment.yaml --namespace prod
+
+                '''
+                }
+            }
+
+        }
+
 
 
 
